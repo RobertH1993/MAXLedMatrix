@@ -176,7 +176,7 @@ void MAXLedMatrix::send_spi_packets_to_all(uint8_t opcode, uint8_t data){
 
 void MAXLedMatrix::send_gfx_to_display(){
 	//Rotate buffer, TODO improve by rotating per segment and based on
-//#ifdef ORIENTATION_FLIP 
+#ifdef ORIENTATION_FLIP 
 	uint8_t rgfx[64] = {};
 	for(uint8_t display = 0; display < n_devices; display++) {
 		for(uint8_t i = 0; i < 8; i++){
@@ -185,7 +185,7 @@ void MAXLedMatrix::send_gfx_to_display(){
 			}
 		}
 	}
-//#endif
+#endif
 	
 	//Send video buffer towards ICs	
 	for(uint8_t row = 0; row < 8; row++){
@@ -194,11 +194,11 @@ void MAXLedMatrix::send_gfx_to_display(){
 		digitalWrite(SPI_CLK_pin, LOW);
 		for(int8_t i = 0; i < n_devices; i++){
 			shiftOut(SPI_MOSI_pin, SPI_CLK_pin, MSBFIRST, opcode);
-//#ifdef ORIENTATION_FLIP
+#ifdef ORIENTATION_FLIP
 			shiftOut(SPI_MOSI_pin, SPI_CLK_pin, MSBFIRST, rgfx[(i * 8) + row]);
-//#else
-//			shiftOut(SPI_MOSI_pin, SPI_CLK_pin, MSBFIRST, gfx[(i * 8) + row]);
-//#endif
+#else
+			shiftOut(SPI_MOSI_pin, SPI_CLK_pin, MSBFIRST, gfx[(i * 8) + row]);
+#endif
 		}
 		digitalWrite(SPI_CS_pin, HIGH);
 	}
